@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wordish Unlimited — Clean Build</title>
+  <meta name="description" content="Unlimited Wordle-style game. Fresh word list support.">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <h1>Wordish <span class="accent">Unlimited</span></h1>
+    <div class="controls">
+      <button id="newGameBtn" type="button">New game</button>
+      <button id="settingsBtn" type="button" aria-haspopup="dialog">Settings</button>
+      <button id="statsBtn" type="button" aria-haspopup="dialog">Stats</button>
+      <button id="helpBtn" type="button" aria-haspopup="dialog">?</button>
+      <label class="switch" title="Toggle dark mode">
+        <input type="checkbox" id="darkToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </header>
+
+  <main>
+    <section id="board" class="board" role="grid" aria-label="Game board"></section>
+
+    <section class="keyboard" aria-label="On-screen keyboard">
+      <div class="kb-row" data-row="0"></div>
+      <div class="kb-row" data-row="1"></div>
+      <div class="kb-row" data-row="2"></div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Settings modal -->
+  <dialog id="settingsDialog">
+    <form method="dialog" class="modal">
+      <h2>Settings</h2>
+      <label class="item">
+        Guesses per game:
+        <input type="number" id="guessLimit" min="3" max="10" value="6" />
+      </label>
+      <label class="item">
+        <input type="checkbox" id="hardMode" />
+        Hard mode (must use revealed hints)
+      </label>
+      <label class="item">
+        <input type="checkbox" id="allowAnyGuess" />
+        Allow any five-letter guess (skip dictionary check)
+      </label>
+      <label class="item">
+        Word list source:
+        <select id="wordSource">
+          <option value="built-in">Built-in list</option>
+          <option value="words.txt">words.txt (in this repo)</option>
+        </select>
+      </label>
+      <menu>
+        <button id="closeSettings" value="cancel">Close</button>
+        <button id="saveSettings" value="default">Save</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <!-- Stats modal -->
+  <dialog id="statsDialog">
+    <form method="dialog" class="modal">
+      <h2>Stats</h2>
+      <div class="stats">
+        <div><span id="sGames">0</span><small>Played</small></div>
+        <div><span id="sWins">0</span><small>Wins</small></div>
+        <div><span id="sStreak">0</span><small>Streak</small></div>
+        <div><span id="sBest">0</span><small>Best streak</small></div>
+      </div>
+      <div id="answerReveal" class="answer-reveal" aria-live="polite"></div>
+      <div class="share">
+        <button id="shareBtn" type="button">Share result</button>
+      </div>
+      <menu>
+        <button value="cancel">Close</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <!-- Help modal -->
+  <dialog id="helpDialog">
+    <form method="dialog" class="modal">
+      <h2>How to play</h2>
+      <p>Guess the hidden five-letter word in a limited number of tries. After each guess:</p>
+      <ul>
+        <li><span class="legend legend-correct">Green</span> = correct letter in the correct place.</li>
+        <li><span class="legend legend-present">Yellow</span> = letter is in the word, wrong place.</li>
+        <li><span class="legend legend-absent">Grey</span> = letter is not in the word.</li>
+      </ul>
+      <p>Play as many times as you like — click <em>New game</em> for a fresh word.</p>
+      <menu>
+        <button value="cancel">Close</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script>
+    // Dialog fallback for older browsers
+    for (const dlg of document.querySelectorAll('dialog')) {
+      if (typeof dlg.showModal !== 'function') {
+        dlg.setAttribute('open','');
+        dlg.classList.add('fallback-open');
+      }
+    }
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>
